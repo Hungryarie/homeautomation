@@ -1,0 +1,7 @@
+node-red-data/*
+mosquitto/config/passwordfile
+mosquitto/data/*
+mostquitto/log/*
+sqlite/db/
+
+test*
