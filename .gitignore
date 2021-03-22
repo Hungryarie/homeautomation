@@ -1,7 +1,7 @@
 node-red-data/*
 mosquitto/config/passwordfile
 mosquitto/data/*
-mostquitto/log/*
+mosquitto/log/*
 sqlite/db/
 
 test*
