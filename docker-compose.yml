@@ -1,0 +1,52 @@
+
+################################################################################
+# Node-RED Stack or Compose
+################################################################################
+# docker stack deploy node-red --compose-file docker-compose-node-red.yml
+# docker-compose -f docker-compose-node-red.yml -p myNoderedProject up
+################################################################################
+version: "3.7"
+
+services:
+  node-red:
+    image: nodered/node-red:latest
+    container_name: node-red
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Amsterdam
+    ports:
+      - "1880:1880"
+    networks:
+      - node-red-net
+    volumes:
+      - ./node-red-data:/data
+      - ./sqlite/db/:/home 
+    depends_on:
+      - mosquitto
+      - sqlite3
+#    user: "1000:1000"
+
+  mosquitto:
+    image: eclipse-mosquitto
+    container_name: mosquitto
+    networks: 
+      - node-red-net
+    ports:
+      - "1883:1883"
+    volumes:
+     - ./mosquitto/config:/mosquitto/config
+     - ./mosquitto/data:/mosquitto/data
+     - ./mosquitto/log:/mosquitto/log
+
+  sqlite3:
+    build: ./sqlite
+    container_name: sqlite3
+    stdin_open: true
+    tty: true
+    networks:
+      - node-red-net
+    volumes:
+      - ./sqlite/db/:/db/
+
+networks:
+  node-red-net:
