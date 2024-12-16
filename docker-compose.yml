@@ -5,8 +5,6 @@
 # docker stack deploy node-red --compose-file docker-compose-node-red.yml
 # docker-compose -f docker-compose-node-red.yml -p myNoderedProject up
 ################################################################################
-version: "3.7"
-
 services:
   node-red:
     image: nodered/node-red:latest
@@ -20,11 +18,11 @@ services:
       - node-red-net
     volumes:
       - ./node-red-data:/data
-      - ./sqlite/db/:/home 
+      - ./sqlite/db:/home 
     depends_on:
       - mosquitto
       - sqlite3
-#    user: "1000:1000"
+    user: "1000:1000"
 
   mosquitto:
     image: eclipse-mosquitto
@@ -38,6 +36,8 @@ services:
      - ./mosquitto/config:/mosquitto/config
      - ./mosquitto/data:/mosquitto/data
      - ./mosquitto/log:/mosquitto/log
+    user: "1000:1000"
+
 
   sqlite3:
     build: ./sqlite
@@ -48,7 +48,8 @@ services:
     networks:
       - node-red-net
     volumes:
-      - ./sqlite/db/:/db/
+      - ./sqlite/db:/db
+    user: "1000:1000"
 
 networks:
   node-red-net:
